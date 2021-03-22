@@ -30,6 +30,8 @@ func TestGETPlayers(t *testing.T) {
 		res := httptest.NewRecorder()
 
 		server.ServeHTTP(res, req)
+
+		assertStatus(t, res.Code, http.StatusOK)
 		assertResponseBody(t, res.Body.String(), "20")
 	})
 
@@ -38,6 +40,8 @@ func TestGETPlayers(t *testing.T) {
 		res := httptest.NewRecorder()
 
 		server.ServeHTTP(res, req)
+
+		assertStatus(t, res.Code, http.StatusOK)
 		assertResponseBody(t, res.Body.String(), "10")
 	})
 
@@ -47,13 +51,7 @@ func TestGETPlayers(t *testing.T) {
 
 		server.ServeHTTP(res, req)
 
-		receive := res.Code
-		expect := http.StatusNotFound
-
-		if expect != receive {
-			t.Errorf("got %d, want %d", receive, expect)
-		}
-
+		assertStatus(t, res.Code, http.StatusNotFound)
 	})
 }
 
@@ -66,5 +64,12 @@ func assertResponseBody(t testing.TB, receive, expect string) {
 	t.Helper()
 	if receive != expect {
 		t.Errorf("got %q, want %q", receive, expect)
+	}
+}
+
+func assertStatus(t testing.TB, receive, expect int) {
+	t.Helper()
+	if receive != expect {
+		t.Errorf("got %d, want %d", receive, expect)
 	}
 }
